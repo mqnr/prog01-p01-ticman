@@ -40,8 +40,8 @@ It's pretty straightforward. Clone the repository, and at the root, run the `mai
 
 ## Team members
 
-- Oscar Adrián Castán López (260318) [[@oacastan](https://github.com/oacastan)]
-- Martín Zamorano Acuña (251923) [[@mzacuna](https://github.com/mzacuna)]
+- Oscar Adrián Castán López
+- Martín Zamorano Acuña
 
 ## License
 
