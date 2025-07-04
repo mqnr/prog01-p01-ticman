@@ -1,7 +1,7 @@
-import color
-import destinos
-import mapa
-from asientos import (
+import ticman.color as color
+import ticman.destinos as destinos
+import ticman.mapa as mapa
+from ticman.asientos import (
     OCUPADO,
     asiento_actualizar,
     asiento_desocupar,
@@ -12,7 +12,7 @@ from asientos import (
     imprimir_pasajero_por_asiento,
     imprimir_pasajero_por_datos,
 )
-from util import (
+from ticman.util import (
     entrada_ciclo,
     es_alfabetico,
     esperar_continuar,

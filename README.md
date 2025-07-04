@@ -36,13 +36,71 @@ Transporte Intergaláctico Cajeme, which is Spanish for "Cajeme Intergalactic Tr
 
 ## Running
 
-It's pretty straightforward. Clone the repository, and at the root, run the `main.py` file with a Python interpreter.
+You'll need a Python interpreter, version >=3.8.
+
+First, clone the project and navigate into the directory:
+
+```shell
+git clone https://github.com/mqnr/prog01-p01-ticman.git
+cd prog01-p01-ticman
+```
+
+After this you have a couple options.
+
+### Option A: Using a virtual environment (recommended)
+
+1. **Create and activate a virtual environment:**
+
+   ```shell
+   python3 -m venv .venv
+   source .venv/bin/activate # Example for Linux/macOS
+   ```
+
+2. **Install the project:**
+
+   This will add the `ticman` command to your environment's path.
+
+   ```shell
+   pip install .
+   ```
+
+3. **Run the application:**
+
+   ```shell
+   ticman
+   ```
+
+### Option B: Run directly
+
+Since this project has no external dependencies, you can also run it directly as a module from the project root.
+
+```shell
+python3 -m ticman.main
+```
+
+## Running (with Nix)
+
+If you have Nix installed, you can run the project directly:
+
+```shell
+nix run github:mqnr/prog01-p01-ticman
+```
+
+## Usage
+
+The application accepts the following command-line flags:
+
+- `--color`: Enables colored output in the terminal.
+- `--cargar <file_path>`: Loads initial seat reservations from a specified file. You can use multiple `--cargar` flags.
+
+**Example:**
+
+```shell
+# Run with color and load a data file
+ticman --color --cargar ejemplos.txt
+```
 
 ## Team members
 
 - Oscar Adrián Castán López
 - Martín Zamorano Acuña
-
-## License
-
-The MIT License. See `LICENSE` for more.

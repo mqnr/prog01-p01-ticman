@@ -1,7 +1,7 @@
-import color
-import mapa
-import destinos
-from util import tic_imprimir
+import ticman.color as color
+import ticman.mapa as mapa
+import ticman.destinos as destinos
+from ticman.util import tic_imprimir
 
 OCUPADO = "ocupado"
 DESOCUPADO = "desocupado"

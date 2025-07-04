@@ -1,25 +1,42 @@
 {
   description = "A Nix-flake-based Python development environment";
 
-  inputs.nixpkgs.url = "https://flakehub.com/f/NixOS/nixpkgs/0.1.*.tar.gz";
+  inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
+    systems.url = "github:nix-systems/default";
+  };
 
-  outputs = { self, nixpkgs }:
+  outputs =
+    { nixpkgs, systems, ... }:
     let
-      supportedSystems = [ "x86_64-linux" "aarch64-linux" "x86_64-darwin" "aarch64-darwin" ];
-      forEachSupportedSystem = f: nixpkgs.lib.genAttrs supportedSystems (system: f {
-        pkgs = import nixpkgs { inherit system; };
-      });
+      inherit (nixpkgs) lib;
+
+      pypkgsFn = pkgs: { pypkgs = pkgs.python313Packages; };
+
+      eachSystem = lib.genAttrs (import systems);
+
+      pkgsForEach = eachSystem (system: import nixpkgs { localSystem.system = system; });
     in
     {
-      devShells = forEachSupportedSystem ({ pkgs }: {
-        default = pkgs.mkShell {
-          venvDir = ".venv";
-          packages = with pkgs; [ python311 ] ++
-            (with pkgs.python311Packages; [
-              pip
-              venvShellHook
-            ]);
-        };
-      });
+      packages = lib.mapAttrs (
+        system: pkgs: with pypkgsFn pkgs; {
+          default = pypkgs.buildPythonApplication {
+            pname = "ticman";
+            version = "0.1.0";
+            pyproject = true;
+            src = ./.;
+            build-system = [ pypkgs.setuptools ];
+          };
+        }
+      ) pkgsForEach;
+
+      devShells = lib.mapAttrs (
+        system: pkgs: with pypkgsFn pkgs; {
+          default = pkgs.mkShell {
+            venvDir = ".venv";
+            packages = [ pypkgs.venvShellHook ];
+          };
+        }
+      ) pkgsForEach;
     };
 }

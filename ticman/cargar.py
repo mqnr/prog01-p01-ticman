@@ -1,5 +1,5 @@
-from asientos import OCUPADO, asiento_actualizar, asiento_numero, asiento_vacio
-import mapa
+from ticman.asientos import OCUPADO, asiento_actualizar, asiento_numero, asiento_vacio
+import ticman.mapa as mapa
 
 
 def cargar_archivos(argumentos):

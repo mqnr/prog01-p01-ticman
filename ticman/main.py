@@ -1,10 +1,10 @@
-from cargar import cargar_archivos
-import color
-import comandos
-import mapa
+from ticman.cargar import cargar_archivos
+import ticman.color as color
+import ticman.comandos as comandos
+import ticman.mapa as mapa
 import sys
-from asientos import asiento_vacio
-from util import (
+from ticman.asientos import asiento_vacio
+from ticman.util import (
     imprimir_error_esperar,
     imprimir_reporte_archivos_cargados,
     tic_entrada,
@@ -68,4 +68,9 @@ def menu_principal():
             imprimir_error_esperar("Opción invalida.")
 
 
-menu_principal()
+def main():
+    menu_principal()
+
+
+if __name__ == "__main__":
+    main()

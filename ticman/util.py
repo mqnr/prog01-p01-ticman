@@ -1,4 +1,4 @@
-import color
+import ticman.color as color
 import re
 import os
 import sys
