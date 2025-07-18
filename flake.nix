@@ -7,36 +7,43 @@
   };
 
   outputs =
-    { nixpkgs, systems, ... }:
+    {
+      self,
+      nixpkgs,
+      systems,
+      ...
+    }:
     let
       inherit (nixpkgs) lib;
 
-      pypkgsFn = pkgs: { pypkgs = pkgs.python313Packages; };
-
       eachSystem = lib.genAttrs (import systems);
 
-      pkgsForEach = eachSystem (system: import nixpkgs { localSystem.system = system; });
+      pkgsForEach = eachSystem (
+        system:
+        import nixpkgs {
+          localSystem.system = system;
+          overlays = [ self.overlays.default ];
+        }
+      );
     in
     {
-      packages = lib.mapAttrs (
-        system: pkgs: with pypkgsFn pkgs; {
-          default = pypkgs.buildPythonApplication {
-            pname = "ticman";
-            version = "0.1.0";
-            pyproject = true;
-            src = ./.;
-            build-system = [ pypkgs.setuptools ];
-          };
-        }
-      ) pkgsForEach;
+      overlays.default = self: super: { pypkgs = super.python313Packages; };
 
-      devShells = lib.mapAttrs (
-        system: pkgs: with pypkgsFn pkgs; {
-          default = pkgs.mkShell {
-            venvDir = ".venv";
-            packages = [ pypkgs.venvShellHook ];
-          };
-        }
-      ) pkgsForEach;
+      packages = lib.mapAttrs (system: pkgs: {
+        default = pkgs.pypkgs.buildPythonApplication {
+          pname = "ticman";
+          version = "0.1.0";
+          pyproject = true;
+          src = ./.;
+          build-system = [ pkgs.pypkgs.setuptools ];
+        };
+      }) pkgsForEach;
+
+      devShells = lib.mapAttrs (system: pkgs: {
+        default = pkgs.mkShell {
+          venvDir = ".venv";
+          packages = [ pkgs.pypkgs.venvShellHook ];
+        };
+      }) pkgsForEach;
     };
 }
