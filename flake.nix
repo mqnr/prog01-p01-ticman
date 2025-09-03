@@ -18,32 +18,33 @@
 
       eachSystem = lib.genAttrs (import systems);
 
-      pkgsForEach = eachSystem (
+      argsForEach = eachSystem (
         system:
-        import nixpkgs {
-          localSystem.system = system;
-          overlays = [ self.overlays.default ];
+        let
+          pkgs = import nixpkgs { inherit system; };
+          pypkgs = pkgs.python313Packages;
+        in
+        {
+          inherit system pkgs pypkgs;
         }
       );
     in
     {
-      overlays.default = self: super: { pypkgs = super.python313Packages; };
-
-      packages = lib.mapAttrs (system: pkgs: {
-        default = pkgs.pypkgs.buildPythonApplication {
+      packages = lib.mapAttrs (system: args: {
+        default = args.pypkgs.buildPythonApplication {
           pname = "ticman";
           version = "0.1.0";
           pyproject = true;
           src = ./.;
-          build-system = [ pkgs.pypkgs.setuptools ];
+          build-system = [ args.pypkgs.setuptools ];
         };
-      }) pkgsForEach;
+      }) argsForEach;
 
-      devShells = lib.mapAttrs (system: pkgs: {
-        default = pkgs.mkShell {
+      devShells = lib.mapAttrs (system: args: {
+        default = args.pkgs.mkShell {
           venvDir = ".venv";
-          packages = [ pkgs.pypkgs.venvShellHook ];
+          packages = [ args.pypkgs.venvShellHook ];
         };
-      }) pkgsForEach;
+      }) argsForEach;
     };
 }
